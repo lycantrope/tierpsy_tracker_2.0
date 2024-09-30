@@ -99,4 +99,34 @@ Example of running
 ProcessLocal --input_vid 'Data/transfer_2833382_files_c35b8490/RawVideos' --params_well 'Data/transfer_2833382_files_c35b8490/loopbio_rig_6WP_splitFOV_NN_20220202.json' --process_type 'local' --apply_spline True  --post_process True --track_detect True --file_extension "*.mp4"
 
 
+# Model
+The model and training data can be found in zenodo (see the paper for a link).Once downloaded (or in case you trained a model), the model must be placed int the following folder:
+[model directory](tierpsynn/extras/models)
+
+Otherwise the path of your model must be specifed in the json file:
+"model_path":"path to your model"
+
+
+# Train data 
+
+The training data can also be downloaded from zenodo. See the paper for a link. 
+
+Training of the data can be done by running the follwoing command when DT_C is active:
+
+
+train_process [--data_dir DATA_DIR] [--npca NPCA] [--cutoff CUTOFF] [--sigma SIGMA] [--epochs EPOCHS] [--model_dir MODEL_DIR]
+
+data_dir = 'Path to your training data'. See example:
+
+```
+└── 📁training_data
+    └── Training_data.hdf5
+    └── final_train_NN.npy
+```
+
+
+
+
+
+
 
