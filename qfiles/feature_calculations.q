@@ -1,0 +1,19 @@
+#! /bin/bash
+#SBATCH --job-name=analysis
+#SBATCH --partition=cpu
+#SBATCH --time=10:00:00
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=1
+#SBATCH --output=/dev/null
+#SBATCH --mem=32G
+module load miniconda3
+conda activate DT_C
+FILESSOURCE=$1
+
+echo "Username: " `whoami`
+FSOURCE=$(sed -n "${SLURM_ARRAY_TASK_ID}p" $FILESSOURCE)
+echo ${FSOURCE}
+eval $FSOURCE
+
+exit 0
+
