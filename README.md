@@ -100,23 +100,22 @@ ProcessLocal --input_vid 'Data/transfer_2833382_files_c35b8490/RawVideos' --para
 
 
 # Model
-The model and training data can be found in zenodo (see the paper for a link).Once downloaded (or in case you trained a model), the model must be placed int the following folder:
-[model directory](tierpsynn/extras/models)
+The model and training data can be found on Zenodo (see the paper for the link). Once downloaded (or if you have trained a model), the model must be placed in the following folder:
+model directory
 
-Otherwise the path of your model must be specifed in the json file:
-"model_path":"path to your model"
+Alternatively, the path to your model must be specified in the JSON file:
+"model_path": "path_to_your_model"
 
 
 # Train data 
 
-The training data can also be downloaded from zenodo. See the paper for a link. 
+The training data can also be downloaded from Zenodo. See the paper for the link.
 
-Training of the data can be done by running the follwoing command when DT_C is active:
-
+Training the data can be done by running the following command when the DT_C environment is active:
 
 train_process [--data_dir DATA_DIR] [--npca NPCA] [--cutoff CUTOFF] [--sigma SIGMA] [--epochs EPOCHS] [--model_dir MODEL_DIR]
 
-data_dir = 'Path to your training data'. See example:
+data_dir: Path to your training data. See the example structure below:
 
 ```
 └── 📁training_data
