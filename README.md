@@ -126,4 +126,18 @@ data_dir: Path to your training data. See the example structure below:
 The HDF5 file contains your entire training set (input images and labels), while the .npy file contains all the possible skeletons in your training data. This is used for the PCA transformation matrix.
 
 
+To open the training files, run the following python commands:
+```bash
+from pathlib import Path
+import h5py
+from tqdm import tqdm
+import numpy as np
+
+with h5py.File(Path('Training_data.hdf5'), 'r+') as f:
+    for dataset_x, dataset_y in tqdm(zip(f['x_train'], f['y_train'])):
+        X = f['x_train'][dataset_x][0, :]  # Shape (C, H, W)
+        Y = f['y_train'][dataset_y][0, :]  # Shape (N, M, T, 2)
+
+ with open(Path('final_train_NN.npy'), "rb") as f:
+        y_train = np.load(f)
 
