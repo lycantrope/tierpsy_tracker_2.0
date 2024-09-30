@@ -123,9 +123,7 @@ data_dir: Path to your training data. See the example structure below:
     └── final_train_NN.npy
 ```
 
-
-
-
+The HDF5 file contains your entire training set (input images and labels), while the .npy file contains all the possible skeletons in your training data. This is used for the PCA transformation matrix.
 
 
 
