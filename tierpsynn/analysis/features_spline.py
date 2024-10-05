@@ -292,7 +292,9 @@ def _process_skeletons(
 
                     skeleton = np.concatenate(
                         [
-                            _return_spline_skeleton(skel, fr_stamp, 6)
+                            _return_spline_skeleton(
+                                skel, fr_stamp, params_input.time_param
+                            )
                             for skel, fr_stamp in zip(segments_spline, frame_spline)
                             if len(fr_stamp) == params_input.spline_segments
                         ]
