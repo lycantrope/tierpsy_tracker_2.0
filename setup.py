@@ -26,13 +26,6 @@ class CustomBuildExt(build_ext):
 
 # Configuration for the setup
 setup(
-    name="tierpsynn",
-    version="0.0.1",
-    description="Tool for skeletonising worms",
-    url="",
-    author="Weheliye Hashi",
-    author_email="w.weheliye@ic.ac.uk",
-    license="MIT",
     packages=find_packages(),
     zip_safe=False,
     ext_modules=cythonize(

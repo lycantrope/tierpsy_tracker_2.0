@@ -1,8 +1,15 @@
+[project]
+name = "tierpsynn"
+version = "0.1.0"
+description = "Tool for skeletonising worms"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+authors = [{ name = "Weheliye Hashi", email = "w.weheliye@ic.ac.uk" }]
+
+license = { text = "MIT" }
+
+
 [build-system]
-requires = [
-    "setuptools>=64",
-    "wheel",
-    "cython",
-    "numpy"
-]
+requires = ["setuptools>=64", "wheel", "cython", "numpy"]
 build-backend = "setuptools.build_meta"

@@ -8,22 +8,22 @@ Created on 12 June 2024
 
 import argparse
 import gc
-import multiprocessing as mp
 import os
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from datetime import date
 from pathlib import Path
 
 import h5py
-import tierpsynn as tnn
 import tqdm
+
+import tierpsynn as tnn
 from tierpsy.processing.helper import find_valid_files
 
 
 # %%
-def _testFileExists(fname):
-    fname = os.path.abspath(fname)
-    if not os.path.exists(fname):
+def _testFileExists(fname: os.PathLike):
+    fname = Path(fname).absolute()
+    if not Path(fname).exists():
         raise FileNotFoundError(f"{fname} does not exist.")
     return fname
 
@@ -198,7 +198,7 @@ def main(
     valid_video_files, corrupt_video_files = _return_videos(valid_files)
 
     # store the corrupt videos
-    with open(Path(log_dir) / f"corrupt_videos.txt", "w") as log_file:
+    with open(Path(log_dir) / "corrupt_videos.txt", "w") as log_file:
         for corrupt_file in corrupt_video_files:
             log_file.write(f"{corrupt_file}\n")
 
@@ -208,9 +208,10 @@ def main(
 
     if process_type == "HPC":
         today_str = str(date.today())
-        with open(Path(log_dir) / f"detect_track_{today_str}.txt", "w") as dt, open(
-            Path(log_dir) / f"features_{today_str}.txt", "w"
-        ) as fet:
+        with (
+            open(Path(log_dir) / f"detect_track_{today_str}.txt", "w") as dt,
+            open(Path(log_dir) / f"features_{today_str}.txt", "w") as fet,
+        ):
             dt.write("\n".join(cmd_detect_track))
             fet.write("\n".join(cmd_features))
     else:

@@ -1,6 +1,8 @@
 # %%
 
+import os
 import pickle
+from contextlib import contextmanager
 from pathlib import Path
 from typing import Union
 
@@ -9,9 +11,9 @@ import h5py
 import jax
 import jax.numpy as jnp
 import numpy as np
+
 import tierpsynn as tnn
 from deeptangle import build_model, utils
-from skimage.transform import rescale
 from tierpsy.analysis.split_fov.FOVMultiWellsSplitter import FOVMultiWellsSplitter
 from tierpsy.helper.params.tracker_param import SplitFOVParams
 from tierpsynn.extras.Para_config import Config
@@ -52,8 +54,8 @@ def _return_masked_image(params_input):
     return fovsplitter
 
 
-def selectVideoReader(params_input: str):
-    video_file = params_input
+@contextmanager
+def selectVideoReader(video_file: os.PathLike):
     # open video to read
     isHDF5video = video_file.endswith(".hdf5")
 
@@ -76,12 +78,13 @@ def selectVideoReader(params_input: str):
 
     if vid.width == 0 or vid.height == 0:
         raise RuntimeError
-
-    return vid
+    try:
+        return vid
+    finally:
+        vid.release()
 
 
 def _return_masked_image(params_input):
-
     json_fname = Path(tnn.MWP_PATH).joinpath(params_input.MW_mapping)
 
     splitfov_params = SplitFOVParams(json_file=json_fname)

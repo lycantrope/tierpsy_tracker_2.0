@@ -4,7 +4,7 @@ import warnings
 
 import tierpsynn as tnn
 
-warnings.filterwarnings('ignore')
+warnings.filterwarnings("ignore")
 
 
 def str_or_int(value):
@@ -12,6 +12,8 @@ def str_or_int(value):
         return int(value)
     except ValueError:
         return str(value)
+
+
 def str2bool(value):
     if isinstance(value, bool):
         return value
@@ -24,40 +26,38 @@ def str2bool(value):
 
 
 def main(input_vid, params_well, apply_spline, track_detect, get_features):
-   
     if track_detect:
         """
          Initialise the parameters and detect and track worms 
 
         """
-     
-        params_input, params_results = tnn._initialise_parameters(input_vid, params_well)
-     
-        store = tnn.selectVideoReader(input_vid)
-        tnn._detect_worm(
+
+        params_input, params_results = tnn._initialise_parameters(
+            input_vid, params_well
+        )
+
+        with tnn.selectVideoReader(input_vid) as store:
+            tnn._detect_worm(
                 store,
                 params_input,
                 **params_results,
             )
-        tnn._track_worm(
-            params_results["save_name"],
-            memory=15,
-            window = params_input.tracking_window_time,
-            track_video_shape=(store.height, store.width),
-        )
-        store.release()
-       
+            tnn._track_worm(
+                params_results["save_name"],
+                memory=15,
+                window=params_input.tracking_window_time,
+                track_video_shape=(store.height, store.width),
+            )
 
     if get_features:
-    
         """_
         Get Feature summaries that are compatible with tierpsy tracker viewer 
         """
-        params_input, save_name= tnn._initialise_parameters_features(input_vid, params_well)
-      
-        identities_list, splines_list = tnn._return_tracked_data(
-            save_name
+        params_input, save_name = tnn._initialise_parameters_features(
+            input_vid, params_well
         )
+
+        identities_list, splines_list = tnn._return_tracked_data(save_name)
         tnn._process_skeletons(
             save_name,
             splines_list,
@@ -67,16 +67,19 @@ def main(input_vid, params_well, apply_spline, track_detect, get_features):
         )
 
 
-
 def process_main_local():
     parser = argparse.ArgumentParser(description="Track and segment worms in a video.")
     parser.add_argument("--input_vid", type=str, help="Path to the input video file")
-    parser.add_argument("--params_well", type=str_or_int, help="Path to the params well file")
-    parser.add_argument("--apply_spline", type=str2bool, default=False, help="Apply spline")
+    parser.add_argument("--params_well", type=int, help="Path to the params well file")
+    parser.add_argument(
+        "--apply_spline", type=str2bool, default=False, help="Apply spline"
+    )
     parser.add_argument(
         "--track_detect", type=str2bool, default=False, help="Track and detect"
     )
-    parser.add_argument("--get_features", type=str2bool, default=False, help="post process")
+    parser.add_argument(
+        "--get_features", type=str2bool, default=False, help="post process"
+    )
 
     args = parser.parse_args()
     main(
@@ -87,6 +90,6 @@ def process_main_local():
         args.get_features,
     )
 
-if __name__=="__main__":
+
+if __name__ == "__main__":
     process_main_local()
-#

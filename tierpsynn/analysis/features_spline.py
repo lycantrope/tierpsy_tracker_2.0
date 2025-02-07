@@ -6,9 +6,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import tables as tb
+import tqdm
+
 import tierpsynn as tnn
 import tierpsynn.extras.cython_files.spline_cython as sp
-import tqdm
 from deeptangle.predict import Predictions
 from tierpsy.analysis.ske_orient.checkHeadOrientation import isWormHTSwitched
 from tierpsy.features.tierpsy_features import features
@@ -307,7 +308,6 @@ def _process_skeletons(
                         ]
                     )
                 else:
-
                     skeleton = np.array(
                         [splines_list[x][y, :] for x, y in zip(worm_i, worm_j)]
                     )
@@ -379,7 +379,7 @@ def _process_skeletons(
                 #   break
                 if params_input.MW_mapping:
                     fovsplitter.write_fov_wells_to_file(skeleton_folder)
-            except Exception as e:
+            except Exception:
                 continue
 
 
@@ -390,7 +390,6 @@ def _process_skeletons(
 Test and view the results 
 """
 if __name__ == "__main__":
-
     input_vid = "/home/weheliye@cscdom.csc.mrc.ac.uk/behavgenom_mnt/Weheliye/Test/RawVideos/1.1_4_n2_6b_Set0_Pos0_Ch3_14012018_125942.hdf5"
     params_well = "/home/weheliye@cscdom.csc.mrc.ac.uk/behavgenom_mnt/Weheliye/Test/loopbio_rig_6WP_splitFOV_NN_20220202.json"
 
@@ -402,7 +401,6 @@ if __name__ == "__main__":
     bn = params_results["save_name"].stem
     # params_results["max_frame"] = 400
     if not params_results["save_name"].joinpath("skeletonNN.hdf5").exists():
-
         store = tnn.selectVideoReader(input_vid)
         tnn._detect_worm(
             store,
