@@ -22,3 +22,7 @@ test
 .magic
 
 .ruff_cache
+
+**/build
+*.so
+*.o
