@@ -30,3 +30,8 @@ license = { text = "MIT" }
 [build-system]
 requires = [ "setuptools>=64", "wheel", "cython", "numpy" ]
 build-backend = "setuptools.build_meta"
+
+[project.scripts]
+train_process = "tierpsynn.train.train:process_main_train"
+tierpsynn_process = "tierpsynn.processing.main_process_local:process_main_local"
+ProcessLocal = "tierpsynn.processing.processMultipleFilesFun:process_main_file"
