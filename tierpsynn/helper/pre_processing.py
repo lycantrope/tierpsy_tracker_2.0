@@ -79,7 +79,7 @@ def selectVideoReader(video_file: os.PathLike):
     if vid.width == 0 or vid.height == 0:
         raise RuntimeError
     try:
-        return vid
+        yield vid
     finally:
         vid.release()
 
