@@ -102,12 +102,12 @@ def _return_videos(valid_files):
         valid_files, total=len(valid_files), desc="Checking if videos are corrupt"
     ):
         #
-        video_reader = tnn.selectVideoReader(vf)
-        if video_reader.height != 0:
-            valid_video_files.append(vf)
-        else:
-            corrupt_video_files.append(vf)
-        video_reader.release()
+        with tnn.selectVideoReader(vf) as video_reader:
+            if video_reader.height != 0:
+                valid_video_files.append(vf)
+            else:
+                corrupt_video_files.append(vf)
+
     return valid_video_files, corrupt_video_files
 
 
