@@ -13,21 +13,21 @@ warnings.simplefilter("always", UserWarning)
 class Config:
     def __init__(self, well_type, raw_fname):
         self.raw_fname = raw_fname
-        self.input_video = tnn.selectVideoReader(self.raw_fname)
-        self.well_type = well_type
-        self.params_in_file = self._return_parameters()
-        self.expected_fps = self.params_in_file["expected_fps"]
-        if not self.expected_fps:
-            try:
-                self.expected_fps = int(self.input_video.fps)  # self._expected_fps()
-            except Exception as e:
-                self.expected_fps = 1
-                warnings.warn(
-                    "Cannot determine the FPS; therefore, assigned a value of 1. "
-                    "If you know your FPS value, please modify the JSON parameters file for the expected FPS.",
-                    UserWarning,
-                )
-        self.input_video.release()
+        with tnn.selectVideoReader(self.raw_fname) as input_video:
+            self.well_type = well_type
+            self.params_in_file = self._return_parameters()
+            self.expected_fps = self.params_in_file["expected_fps"]
+            if not self.expected_fps:
+                try:
+                    self.expected_fps = int(input_video.fps)  # self._expected_fps()
+                except Exception:
+                    self.expected_fps = 1
+                    warnings.warn(
+                        "Cannot determine the FPS; therefore, assigned a value of 1. "
+                        "If you know your FPS value, please modify the JSON parameters file for the expected FPS.",
+                        UserWarning,
+                    )
+
         self.step_size = self.params_in_file["step_size"]
         self.threshold = self.params_in_file["threshold"]
         self.overlap_threshold = self.params_in_file["overlap_threshold"]
