@@ -3,7 +3,6 @@ from typing import List
 
 import numba
 import numpy as np
-import sklearn
 import trackpy
 
 from deeptangle.predict import Predictions
@@ -25,7 +24,7 @@ class CustomLinker(trackpy.linking.linking.Linker):
         dist_func=None,
         to_eucl=None,
         *args,
-        **kwargs
+        **kwargs,
     ):
         neighbor_strategy_ = neighbor_strategy
         if not isinstance(neighbor_strategy, str):
@@ -41,7 +40,7 @@ class CustomLinker(trackpy.linking.linking.Linker):
             dist_func=dist_func,
             to_eucl=to_eucl,
             *args,
-            **kwargs
+            **kwargs,
         )
         if not isinstance(neighbor_strategy, str):
             self.hash_cls = neighbor_strategy
@@ -278,7 +277,9 @@ def _filter_stubs(tracks, values, minimum=5):
 
 def merge_tracks(tracks, values, window, framesize=512, padding=32):
     # TODO(albert): Assumes square frames, and it shouldn't
-    endpoints = _find_endpoints(tracks, values,window=window,  low=padding, high=framesize - padding)
+    endpoints = _find_endpoints(
+        tracks, values, window=window, low=padding, high=framesize - padding
+    )
     pairs_map = _pair_mapping(endpoints, cutoff=8)
     new_tracks = _replace_tracks(tracks, pairs_map)
     new_tracks, new_values = _filter_stubs(new_tracks, values)
