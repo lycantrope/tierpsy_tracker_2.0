@@ -3,8 +3,8 @@ from typing import NamedTuple
 
 import jax
 import jax.numpy as jnp
-from numba import njit
 import numpy as np
+from numba import njit
 
 from deeptangle.utils import NetState
 
@@ -135,6 +135,10 @@ def detect(
     predictions = predict(forward_fn, netstate, inputs)
     predictions = jax.tree_util.tree_map(lambda x: x[0], predictions)
     predictions = jax.tree_util.tree_map(np.asarray, predictions)
-    best_predictions_idx = non_max_suppression(predictions, threshold, overlap_threshold, cutoff)
-    final_predictions = jax.tree_util.tree_map(lambda x: x[best_predictions_idx], predictions)
+    best_predictions_idx = non_max_suppression(
+        predictions, threshold, overlap_threshold, cutoff
+    )
+    final_predictions = jax.tree_util.tree_map(
+        lambda x: x[best_predictions_idx], predictions
+    )
     return final_predictions

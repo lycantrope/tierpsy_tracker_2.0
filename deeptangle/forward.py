@@ -1,6 +1,7 @@
 """
 Wrappers to build the model from scratch or from a checkpoint.
 """
+
 import haiku as hk
 import jax
 import jax.numpy as jnp
@@ -36,9 +37,8 @@ def build_model(A: jnp.ndarray, num_suggestions: int, latent_dim: int, num_frame
         batch = jnp.transpose(batch, axes=(0, 2, 3, 1))
 
         # Predict
-        S, H, P= predictor(batch, is_training, B)
-       
-        
+        S, H, P = predictor(batch, is_training, B)
+
         # Transform confidence score to be in [0,1] range.
         S = jax.nn.sigmoid(S)
         # Convert eigenvalues to coordinates.

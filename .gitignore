@@ -26,3 +26,4 @@ test
 **/build
 *.so
 *.o
+*.c

@@ -1,9 +1,9 @@
 from typing import Optional, Sequence
 
 import haiku as hk
-from haiku._src.nets.resnet import BlockGroup
 import jax
 import jax.numpy as jnp
+from haiku._src.nets.resnet import BlockGroup
 
 
 class Detector(hk.Module):
@@ -22,11 +22,18 @@ class Detector(hk.Module):
         super().__init__(name=name)
         self.neigen = npoints
         self.temporal_window = 3
-        self.npoints = self.temporal_window * (npoints + 2) + 1  # (pca values + CM) + score
+        self.npoints = (
+            self.temporal_window * (npoints + 2) + 1
+        )  # (pca values + CM) + score
         self.n_suggestion = n_suggestion_per_feature
         self.offset = None
 
-        bn_config = {"decay_rate": 0.9, "eps": 1e-5, "create_scale": True, "create_offset": True}
+        bn_config = {
+            "decay_rate": 0.9,
+            "eps": 1e-5,
+            "create_scale": True,
+            "create_offset": True,
+        }
 
         # Feature extraction
         init_channels = 64 + sum([nframes // 5 * 2**i for i in range(6)])
@@ -46,19 +53,19 @@ class Detector(hk.Module):
         batch_size, height, width, _ = D.shape
 
         z = self.backbone(D, is_training)
-       # print(f'size of the output {z.shape}')
+        # print(f'size of the output {z.shape}')
         # Predicting positions (eigenvalues)
         w = jax.nn.relu(self.fc_w1(z))
-        #print(f'size of of the second output {w.shape}')
+        # print(f'size of of the second output {w.shape}')
         w = self.bn_w1(w, is_training)
-        #print(f'size of of the third output {w.shape}')
+        # print(f'size of of the third output {w.shape}')
         w = self.fc_w2(w)
-        #print(f'size of of the fourth output {w.shape}')
+        # print(f'size of of the fourth output {w.shape}')
 
         nrows = w.shape[1]
         ncols = w.shape[2]
         w = w.reshape(batch_size, nrows, ncols, self.n_suggestion, self.npoints)
-        #print(f'size of of the final output {w.shape}')
+        # print(f'size of of the final output {w.shape}')
 
         if self.offset is None:
             s_y = (height / nrows / 2) + jnp.arange(0, height, height / nrows)
@@ -68,18 +75,18 @@ class Detector(hk.Module):
         # Separate the score prediction from the positional
         w, s = w[..., :-1], w[..., -1]
 
-        #print(f'score shape {s.shape}')
+        # print(f'score shape {s.shape}')
 
-        #print(f'positional {w.shape}')
+        # print(f'positional {w.shape}')
 
         # Split npoints to tw predictions (past-present-future)
         w = w.reshape(*w.shape[:-1], self.temporal_window, 2 + self.neigen)
         w = self.add_offset(w)
-        #print(f'positional 2 {w.shape}')
+        # print(f'positional 2 {w.shape}')
         # Flatten the prediction from grid to 1D
         w = w.reshape(batch_size, -1, self.temporal_window, 2 + self.neigen)
         s = s.reshape(batch_size, -1)
-        #print(f'positional 3 {w[..., 2:].shape}')
+        # print(f'positional 3 {w[..., 2:].shape}')
         # Predict latent space from the positions (only see the temporal self, not other predictions)
         w = self.align_eigenvalues(w, B)
         p = self.encoder(w, B, is_training=is_training)
@@ -106,7 +113,12 @@ class LatentSpaceEncoder(hk.Module):
     def __init__(self, latent_dim: int, name: Optional[str] = None):
         super().__init__(name)
 
-        bn_config = {"decay_rate": 0.9, "eps": 1e-5, "create_scale": True, "create_offset": True}
+        bn_config = {
+            "decay_rate": 0.9,
+            "eps": 1e-5,
+            "create_scale": True,
+            "create_offset": True,
+        }
         self.fc_p1 = hk.Linear(128)
         self.bn_p1 = hk.BatchNorm(**bn_config)
         self.fc_p2 = hk.Linear(latent_dim)
@@ -142,7 +154,12 @@ class ResNet(hk.Module):
     ):
         super().__init__(name=name)
 
-        bn_config = {"decay_rate": 0.9, "eps": 1e-5, "create_scale": True, "create_offset": True}
+        bn_config = {
+            "decay_rate": 0.9,
+            "eps": 1e-5,
+            "create_scale": True,
+            "create_offset": True,
+        }
 
         self.initial_conv = hk.Conv2D(init_channels, 7, stride=2, with_bias=False)
         self.initial_batchnorm = hk.BatchNorm(name="initial_batchnorm", **bn_config)
@@ -166,7 +183,9 @@ class ResNet(hk.Module):
         out = self.initial_conv(inputs)
         out = self.initial_batchnorm(out, is_training)
         out = jax.nn.relu(out)
-        out = hk.avg_pool(out, window_shape=(1, 3, 3, 1), strides=(1, 2, 2, 1), padding="SAME")
+        out = hk.avg_pool(
+            out, window_shape=(1, 3, 3, 1), strides=(1, 2, 2, 1), padding="SAME"
+        )
 
         for block_group in self.block_groups:
             out = block_group(out, is_training, test_local_stats=False)
