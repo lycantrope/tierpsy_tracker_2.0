@@ -70,7 +70,7 @@ def main(input_vid, params_well, apply_spline, track_detect, get_features):
 def process_main_local():
     parser = argparse.ArgumentParser(description="Track and segment worms in a video.")
     parser.add_argument("--input_vid", type=str, help="Path to the input video file")
-    parser.add_argument("--params_well", type=int, help="Path to the params well file")
+    parser.add_argument("--params_well", type=str, help="Path to the params well file")
     parser.add_argument(
         "--apply_spline", type=str2bool, default=False, help="Apply spline"
     )
