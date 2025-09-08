@@ -191,7 +191,7 @@ def main(
     valid_files = find_valid_files(
         root_dir=video_dir_root, pattern_include=[file_extension]
     )
-    log_dir = video_dir_root.replace("RawVideos", "log")
+    log_dir = video_dir_root.with_name("log")
 
     Path(log_dir).mkdir(exist_ok=True, parents=True)
 
