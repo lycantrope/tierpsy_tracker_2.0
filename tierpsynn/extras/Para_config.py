@@ -27,6 +27,7 @@ class Config:
                         "If you know your FPS value, please modify the JSON parameters file for the expected FPS.",
                         UserWarning,
                     )
+            self.input_video = input_video
 
         self.step_size = self.params_in_file["step_size"]
         self.threshold = self.params_in_file["threshold"]
