@@ -6,6 +6,7 @@ from queue import Empty, Queue
 from threading import Thread
 
 import tables
+
 from tierpsy import AUX_FILES_DIR
 
 

@@ -33,7 +33,7 @@ MODEL_FILES_DIR = os.path.abspath(
         base_path,
         "extras",
         "models",
-        "weights",
+        "parameters_Final_mixed_train_data_wt_hand_ann_pca_92_epochs_250_2024-04-19_96_cutoff",
     )
 )
 

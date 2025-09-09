@@ -127,7 +127,7 @@ The HDF5 file contains your entire training set (input images and labels), while
 
 
 To open the training files, run the following python commands:
-```bash
+```python
 from pathlib import Path
 import h5py
 from tqdm import tqdm
@@ -140,4 +140,5 @@ with h5py.File(Path('Training_data.hdf5'), 'r+') as f:
 
  with open(Path('final_train_NN.npy'), "rb") as f:
         y_train = np.load(f)
+```
 
