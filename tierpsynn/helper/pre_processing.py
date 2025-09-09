@@ -36,20 +36,20 @@ def _return_masked_image(params_input):
     px2um = params_input.microns_per_pixel
 
     # read image
-    vid = selectVideoReader(params_input.raw_fname)
-    _, img = vid.read_frame(100)
+    with selectVideoReader(params_input.raw_fname) as vid:
+        _, img = vid.read_frame(100)
 
-    fovsplitter = FOVMultiWellsSplitter(
-        img,
-        microns_per_pixel=px2um,
-        well_shape=shape,
-        well_size_mm=sz_mm,
-        well_masked_edge=edge_frac,
-        camera_serial=uid,
-        rig=rig,
-        channel=ch,
-        wells_map=mwp_map,
-    )
+        fovsplitter = FOVMultiWellsSplitter(
+            img,
+            microns_per_pixel=px2um,
+            well_shape=shape,
+            well_size_mm=sz_mm,
+            well_masked_edge=edge_frac,
+            camera_serial=uid,
+            rig=rig,
+            channel=ch,
+            wells_map=mwp_map,
+        )
     # fig = fovsplitter.plot_wells()
     return fovsplitter
 
@@ -95,21 +95,21 @@ def _return_masked_image(params_input):
     px2um = params_input.microns_per_pixel
 
     # read image
-    vid = selectVideoReader(str(params_input.raw_fname))
-    _, img = vid.read_frame(100)
+    with selectVideoReader(str(params_input.raw_fname)) as vid:
+        _, img = vid.read_frame(100)
 
-    fovsplitter = FOVMultiWellsSplitter(
-        img,
-        microns_per_pixel=px2um,
-        well_shape=shape,
-        well_size_mm=sz_mm,
-        well_masked_edge=edge_frac,
-        camera_serial=uid,
-        rig=rig,
-        channel=ch,
-        wells_map=mwp_map,
-    )
-    # fig = fovsplitter.plot_wells()
+        fovsplitter = FOVMultiWellsSplitter(
+            img,
+            microns_per_pixel=px2um,
+            well_shape=shape,
+            well_size_mm=sz_mm,
+            well_masked_edge=edge_frac,
+            camera_serial=uid,
+            rig=rig,
+            channel=ch,
+            wells_map=mwp_map,
+        )
+        # fig = fovsplitter.plot_wells()
     return fovsplitter
 
 
@@ -245,16 +245,15 @@ def _initialise_parameters(input_vid: str, params_well: Union[int, str]):
     scale_factor = params_input.scale_factor
 
     # Load and preprocess video
-    store = selectVideoReader(params_input.raw_fname)
-    pre_procesing_clip = np.array(
-        [
-            frame_data[1]
-            for frame in range(min_frame, max_frame, int(max_frame / 10))
-            if (frame_data := store.read_frame(frame))[1] is not None
-        ]
-    )
+    with selectVideoReader(params_input.raw_fname) as store:
+        pre_procesing_clip = np.array(
+            [
+                frame_data[1]
+                for frame in range(min_frame, max_frame, int(max_frame / 10))
+                if (frame_data := store.read_frame(frame))[1] is not None
+            ]
+        )
 
-    store.release()
     if params_input.is_light:
         pre_procesing_clip = 255 - pre_procesing_clip
     bgd = _mean_bgd(pre_procesing_clip)

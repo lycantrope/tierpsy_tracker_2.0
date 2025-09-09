@@ -3,15 +3,15 @@
 
 from pathlib import Path
 
-import deeptangle as dt
 import h5py
 import jax
 import jax.numpy as jnp
 import numpy as np
+from tqdm import trange
+
+import deeptangle as dt
 import tierpsynn as tnn
 from deeptangle.predict import Predictions, non_max_suppression
-from skimage.transform import rescale
-from tqdm import trange
 
 # %%%
 
@@ -75,7 +75,6 @@ def _detect_worm(
         bn = Path(save_name).stem  # parent.name
 
         if scale_factor:
-
             clip_rescaled = jax.image.resize(
                 clip[0],
                 [
@@ -159,7 +158,7 @@ def _detect_worm(
                 clip = np.concatenate(
                     (clip[params_input.step_size :, :], small_clip), axis=0
                 )
-            except Exception as e:
+            except Exception:
                 continue
 
 
@@ -225,18 +224,17 @@ if __name__ == "__main__":
     bn = params_results["save_name"].stem
     params_results["max_frame"] = 400
 
-    store = tnn.selectVideoReader(input_vid)
-    _detect_worm(store, params_input, **params_results)
+    with tnn.selectVideoReader(input_vid) as store:
+        _detect_worm(store, params_input, **params_results)
 
-    if not tnn.is_hdf5_empty(
-        Path(params_results["save_name"]).joinpath("skeletonNN.hdf5")
-    ):
-        _track_worm(
-            params_results["save_name"],
-            memory=15,
-            track_video_shape=(store.height, store.width),
-        )
+        if not tnn.is_hdf5_empty(
+            Path(params_results["save_name"]).joinpath("skeletonNN.hdf5")
+        ):
+            _track_worm(
+                params_results["save_name"],
+                memory=15,
+                track_video_shape=(store.height, store.width),
+            )
 
-    store.release()
 
 # %%

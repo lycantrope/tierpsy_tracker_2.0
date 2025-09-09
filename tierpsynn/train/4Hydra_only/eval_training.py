@@ -44,20 +44,20 @@ def _return_masked_image(raw_fname, px2um=microns_per_pixel):
     px2um = px2um
 
     # read image
-    vid = selectVideoReader(str(raw_fname))
-    status, img = vid.read_frame(0)
+    with selectVideoReader(str(raw_fname)) as vid:
+        status, img = vid.read_frame(0)
 
-    fovsplitter = FOVMultiWellsSplitter(
-        img,
-        microns_per_pixel=px2um,
-        well_shape=shape,
-        well_size_mm=sz_mm,
-        well_masked_edge=edge_frac,
-        camera_serial=uid,
-        rig=rig,
-        channel=ch,
-        wells_map=mwp_map)
-    #fig = fovsplitter.plot_wells()
+        fovsplitter = FOVMultiWellsSplitter(
+            img,
+            microns_per_pixel=px2um,
+            well_shape=shape,
+            well_size_mm=sz_mm,
+            well_masked_edge=edge_frac,
+            camera_serial=uid,
+            rig=rig,
+            channel=ch,
+            wells_map=mwp_map)
+        #fig = fovsplitter.plot_wells()
     return  fovsplitter.get_wells_data()
 
 def load_video(raw_videos):

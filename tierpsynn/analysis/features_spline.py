@@ -401,19 +401,18 @@ if __name__ == "__main__":
     bn = params_results["save_name"].stem
     # params_results["max_frame"] = 400
     if not params_results["save_name"].joinpath("skeletonNN.hdf5").exists():
-        store = tnn.selectVideoReader(input_vid)
-        tnn._detect_worm(
-            store,
-            params_input,
-            **params_results,
-        )
+        with tnn.selectVideoReader(input_vid) as store:
+            tnn._detect_worm(
+                store,
+                params_input,
+                **params_results,
+            )
 
-        tnn._track_worm(
-            params_results["save_name"],
-            memory=15,
-            track_video_shape=(store.height, store.width),
-        )
-        store.release()
+            tnn._track_worm(
+                params_results["save_name"],
+                memory=15,
+                track_video_shape=(store.height, store.width),
+            )
 
     identities_list, splines_list = _return_tracked_data(params_results["save_name"])
 
@@ -442,26 +441,25 @@ if __name__ == "__main__":
 
         outdir_path = Results_folder.joinpath("plot/detect")
         outdir_path.mkdir(exist_ok=True, parents=True)
-        store = tnn.selectVideoReader(params_input.raw_fname)
-        t = np.arange(
-            params_input.start_frame,
-            1000,
-            params_input.step_size,
-        )
-        for t, pred in zip(t, predictions_list):
-            video = store.get_image(store.frame_min + t)[0]
-            fig = plt.figure(figsize=(10.42, 10.42))
-            plt.ylim(0, video.shape[0])
-            plt.xlim(0, video.shape[1])
-            plt.imshow(video, cmap="binary")
+        with tnn.selectVideoReader(params_input.raw_fname) as store:
+            t = np.arange(
+                params_input.start_frame,
+                1000,
+                params_input.step_size,
+            )
+            for t, pred in zip(t, predictions_list):
+                video = store.get_image(store.frame_min + t)[0]
+                fig = plt.figure(figsize=(10.42, 10.42))
+                plt.ylim(0, video.shape[0])
+                plt.xlim(0, video.shape[1])
+                plt.imshow(video, cmap="binary")
 
-            for x in pred.w[:, 1]:
-                plt.plot(x[:, 0], x[:, 1], "-", color="red", linewidth=0.2)
-            if t % 10 == 0:
-                figname = outdir_path.joinpath(f"{t:04d}.png")
-                fig.savefig(figname, pad_inches=0, bbox_inches="tight")
-            plt.close(fig)
-        store.release()
+                for x in pred.w[:, 1]:
+                    plt.plot(x[:, 0], x[:, 1], "-", color="red", linewidth=0.2)
+                if t % 10 == 0:
+                    figname = outdir_path.joinpath(f"{t:04d}.png")
+                    fig.savefig(figname, pad_inches=0, bbox_inches="tight")
+                plt.close(fig)
 
 
 # %%
