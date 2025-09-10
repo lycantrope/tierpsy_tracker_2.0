@@ -100,8 +100,8 @@ ProcessLocal --input_vid 'Data/transfer_2833382_files_c35b8490/RawVideos' --para
 
 
 # Model
-The model and training data can be found on Zenodo (see the paper for the link). Once downloaded (or if you have trained a model), the model must be placed in the following folder:
-model directory
+The model and training data can be found on Zenodo (https://zenodo.org/records/14517883) under DT_C_data_model.zip: --data (which is the training data) --model (which is the actual trained model for the paper). Once downloaded (or if you have trained a model), the model must be placed in the following folder:
+tierpsynn/extras/models
 
 Alternatively, the path to your model must be specified in the JSON file:
 "model_path": "path_to_your_model"
