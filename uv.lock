@@ -609,7 +609,7 @@ wheels = [
 ]
 
 [package.optional-dependencies]
-cuda = [
+cuda12 = [
     { name = "jax-cuda12-plugin", version = "0.5.3", source = { registry = "https://pypi.org/simple" }, extra = ["with-cuda"], marker = "python_full_version >= '3.13' and sys_platform != 'darwin'" },
     { name = "jaxlib", version = "0.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13' and sys_platform != 'darwin'" },
 ]
@@ -636,7 +636,7 @@ wheels = [
 ]
 
 [package.optional-dependencies]
-cuda = [
+cuda12 = [
     { name = "jax-cuda12-plugin", version = "0.6.2", source = { registry = "https://pypi.org/simple" }, extra = ["with-cuda"], marker = "python_full_version < '3.11' and sys_platform != 'darwin'" },
     { name = "jaxlib", version = "0.6.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11' and sys_platform != 'darwin'" },
 ]
@@ -666,7 +666,7 @@ wheels = [
 ]
 
 [package.optional-dependencies]
-cuda = [
+cuda12 = [
     { name = "jax-cuda12-plugin", version = "0.7.1", source = { registry = "https://pypi.org/simple" }, extra = ["with-cuda"], marker = "python_full_version >= '3.11' and python_full_version < '3.13' and sys_platform != 'darwin'" },
     { name = "jaxlib", version = "0.7.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11' and python_full_version < '3.13' and sys_platform != 'darwin'" },
 ]
@@ -832,6 +832,25 @@ with-cuda = [
     { name = "nvidia-nccl-cu12", marker = "python_full_version >= '3.11' and python_full_version < '3.13' and sys_platform == 'linux'" },
     { name = "nvidia-nvjitlink-cu12", marker = "python_full_version >= '3.11' and python_full_version < '3.13' and sys_platform == 'linux'" },
     { name = "nvidia-nvshmem-cu12", marker = "python_full_version >= '3.11' and python_full_version < '3.13' and sys_platform == 'linux'" },
+]
+
+[[package]]
+name = "jax-metal"
+version = "0.1.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "jax", version = "0.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13' and sys_platform == 'darwin'" },
+    { name = "jax", version = "0.6.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11' and sys_platform == 'darwin'" },
+    { name = "jax", version = "0.7.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11' and python_full_version < '3.13' and sys_platform == 'darwin'" },
+    { name = "jaxlib", version = "0.5.3", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.13' and sys_platform == 'darwin'" },
+    { name = "jaxlib", version = "0.6.2", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.11' and sys_platform == 'darwin'" },
+    { name = "jaxlib", version = "0.7.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.11' and python_full_version < '3.13' and sys_platform == 'darwin'" },
+    { name = "six", marker = "sys_platform == 'darwin'" },
+    { name = "wheel", marker = "sys_platform == 'darwin'" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/87/ec/9bb7f7f0ffd06c3fb89813126b2f698636ac7a4263ed7bdd1ff7d7c94f8f/jax_metal-0.1.1-py3-none-macosx_10_14_x86_64.whl", hash = "sha256:d918a78443cb808c9491a24a5c2a94cc4eabfd0461d5bcda29a8f332dfbe9b7e", size = 54662235, upload-time = "2024-10-08T16:57:30.128Z" },
+    { url = "https://files.pythonhosted.org/packages/09/dc/6d8fbfc29d902251cf333414cf7dcfaf4b252a9920c881354584ed36270d/jax_metal-0.1.1-py3-none-macosx_13_0_arm64.whl", hash = "sha256:f1dbfecb298cdd3ba6da3ad6dc9a2adb63d71741f8b8ece28c296b32d608b6c8", size = 41179678, upload-time = "2024-10-08T16:56:31.563Z" },
 ]
 
 [[package]]
@@ -2356,9 +2375,10 @@ dependencies = [
     { name = "dm-pix" },
     { name = "h5py" },
     { name = "imagestore" },
-    { name = "jax", version = "0.5.3", source = { registry = "https://pypi.org/simple" }, extra = ["cuda"], marker = "python_full_version >= '3.13' and sys_platform != 'darwin'" },
-    { name = "jax", version = "0.6.2", source = { registry = "https://pypi.org/simple" }, extra = ["cuda"], marker = "python_full_version < '3.11' and sys_platform != 'darwin'" },
-    { name = "jax", version = "0.7.1", source = { registry = "https://pypi.org/simple" }, extra = ["cuda"], marker = "python_full_version >= '3.11' and python_full_version < '3.13' and sys_platform != 'darwin'" },
+    { name = "jax", version = "0.5.3", source = { registry = "https://pypi.org/simple" }, extra = ["cuda12"], marker = "python_full_version >= '3.13' and sys_platform != 'darwin'" },
+    { name = "jax", version = "0.6.2", source = { registry = "https://pypi.org/simple" }, extra = ["cuda12"], marker = "python_full_version < '3.11' and sys_platform != 'darwin'" },
+    { name = "jax", version = "0.7.1", source = { registry = "https://pypi.org/simple" }, extra = ["cuda12"], marker = "python_full_version >= '3.11' and python_full_version < '3.13' and sys_platform != 'darwin'" },
+    { name = "jax-metal", marker = "sys_platform == 'darwin'" },
     { name = "matplotlib" },
     { name = "numba" },
     { name = "numpy" },
@@ -2383,7 +2403,8 @@ requires-dist = [
     { name = "dm-pix", specifier = ">=0.4.4" },
     { name = "h5py", specifier = ">=3.14.0" },
     { name = "imagestore", specifier = ">=3.1.0" },
-    { name = "jax", extras = ["cuda"], marker = "sys_platform != 'darwin'", specifier = ">=0.5.3" },
+    { name = "jax", extras = ["cuda12"], marker = "sys_platform != 'darwin'", specifier = ">=0.5.3" },
+    { name = "jax-metal", marker = "sys_platform == 'darwin'", specifier = ">=0.1.1" },
     { name = "matplotlib", specifier = ">=3.10.6" },
     { name = "numba", specifier = ">=0.61.2" },
     { name = "numpy", specifier = "<2.0" },
@@ -2500,4 +2521,13 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/15/22/9ee70a2574a4f4599c47dd506532914ce044817c7752a79b6a51286319bc/urllib3-2.5.0.tar.gz", hash = "sha256:3fc47733c7e419d4bc3f6b3dc2b4f890bb743906a30d56ba4a5bfa4bbff92760", size = 393185, upload-time = "2025-06-18T14:07:41.644Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a7/c2/fe1e52489ae3122415c51f387e221dd0773709bad6c6cdaa599e8a2c5185/urllib3-2.5.0-py3-none-any.whl", hash = "sha256:e6b01673c0fa6a13e374b50871808eb3bf7046c4b125b216f6bf1cc604cff0dc", size = 129795, upload-time = "2025-06-18T14:07:40.39Z" },
+]
+
+[[package]]
+name = "wheel"
+version = "0.45.1"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/8a/98/2d9906746cdc6a6ef809ae6338005b3f21bb568bea3165cfc6a243fdc25c/wheel-0.45.1.tar.gz", hash = "sha256:661e1abd9198507b1409a20c02106d9670b2576e916d58f520316666abca6729", size = 107545, upload-time = "2024-11-23T00:18:23.513Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/0b/2c/87f3254fd8ffd29e4c02732eee68a83a1d3c346ae39bc6822dcbcb697f2b/wheel-0.45.1-py3-none-any.whl", hash = "sha256:708e7481cc80179af0e556bbf0cc00b8444c7321e2700b8d8580231d13017248", size = 72494, upload-time = "2024-11-23T00:18:21.207Z" },
 ]
