@@ -4,7 +4,7 @@ import shutil
 import numpy as np
 from Cython.Build import cythonize
 from Cython.Distutils import build_ext
-from setuptools import find_packages, setup
+from setuptools import Extension, find_packages, setup
 
 # Define the path to the Cython source files
 cython_path = os.path.join("tierpsynn", "extras", "cython_files")
@@ -24,14 +24,39 @@ class CustomBuildExt(build_ext):
         shutil.move(built_path, os.path.join(target_dir, os.path.basename(built_path)))
 
 
+cuda_compile_args = [
+    "-arch=sm_90",  # Replace XX with your GPU's compute capability (e.g., sm_75)
+    "-rdc=true",  # Relocatable device code
+    "-O3",
+    "--std=c++17",  # Or your desired C++ standard
+]
+cuda_link_args = [
+    "-lcudart",  # Link against CUDA runtime library
+]
+
+
+extensions = [
+    Extension(
+        "spline_cython",
+        [spline_cython_pyx],
+        language="c++",  # Important for C++ and CUDA
+        extra_compile_args=cuda_compile_args,
+        extra_link_args=cuda_link_args,
+        # Include directories for CUDA headers if needed
+        include_dirs=["/usr/local/cuda/include", np.get_include()],
+        # Library directories for CUDA libraries if needed
+        library_dirs=["/usr/local/cuda/lib64"],
+    )
+]
+
+
 # Configuration for the setup
 setup(
     packages=find_packages(),
     zip_safe=False,
     ext_modules=cythonize(
-        [spline_cython_pyx],
+        extensions,
         compiler_directives={"language_level": "3"},  # Ensure Python 3 language level
     ),
-    include_dirs=[np.get_include()],
     cmdclass={"build_ext": CustomBuildExt},
 )
