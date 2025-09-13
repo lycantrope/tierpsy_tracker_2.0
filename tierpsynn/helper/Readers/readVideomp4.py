@@ -28,29 +28,29 @@ class readVideomp4:
     def read(self):
         # Read the next frame in the video
         ret, img = self.vid.read()
-        if ret:
-            img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            frame_number = int(self.vid.get(cv2.CAP_PROP_POS_FRAMES)) - 1
-            frame_timestamp = frame_number / self.fps  # Approximate timestamp
-            self.frames_read.append((frame_number, frame_timestamp))
-            return 1, img
-        else:
-            return 0, None
+        if not ret:
+            return False, None
+
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        frame_number = int(self.vid.get(cv2.CAP_PROP_POS_FRAMES)) - 1
+        frame_timestamp = frame_number / self.fps  # Approximate timestamp
+        self.frames_read.append((frame_number, frame_timestamp))
+        return True, img
 
     def read_frame(self, frame_number):
         # Jump to the specific frame number and read it
-        if frame_number <= self.frame_max:
-            self.vid.set(cv2.CAP_PROP_POS_FRAMES, frame_number)
-            ret, img = self.vid.read()
-            if ret:
-                img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-                frame_timestamp = frame_number / self.fps
-                self.frames_read.append((frame_number, frame_timestamp))
-                return 1, img
-            else:
-                return 0, None
-        else:
-            return 0, None
+        if frame_number >= self.frame_max:
+            return False, None
+
+        self.vid.set(cv2.CAP_PROP_POS_FRAMES, frame_number)
+        ret, img = self.vid.read()
+        if not ret:
+            return False, None
+
+        img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        frame_timestamp = frame_number / self.fps
+        self.frames_read.append((frame_number, frame_timestamp))
+        return True, img
 
     def __len__(self):
         # Return the total number of frames in the video

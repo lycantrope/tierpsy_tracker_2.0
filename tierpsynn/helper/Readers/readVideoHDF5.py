@@ -2,14 +2,14 @@
 """
 Created on Sun Oct 14:33:18 2024
 
-@author: weheliye 
+@author: weheliye
 """
-import tables
+
 import numpy as np
+import tables
 
 
 class readVideoHDF5:
-
     def __init__(self, fileName, full_img_period=np.inf, dataset="/mask"):
         # to be used when added to the plugin
         self.vid_frame_pos = []
@@ -18,7 +18,7 @@ class readVideoHDF5:
         try:
             self.fid = tables.File(fileName, "r")
             self.dataset = self.fid.get_node(dataset)
-        except:
+        except IOError:
             raise OSError
 
         self.tot_frames = self.dataset.shape[0]
@@ -43,16 +43,15 @@ class readVideoHDF5:
             # self.value2replace = np.max(self.full_img)
             self.value2replace = np.percentile(self.full_img[self.full_img != 0], 95)
 
-        if self.curr_frame < self.tot_frames:
-            image = self.dataset[self.curr_frame, :, :]
-            mask_bw = image == 0
-            image[mask_bw] = self.value2replace
-            return (1, image)
-        else:
-            return (0, [])
+        if self.curr_frame > self.tot_frames:
+            return False, None
+
+        image = self.dataset[self.curr_frame, :, :]
+        mask_bw = image == 0
+        image[mask_bw] = self.value2replace
+        return True, image
 
     def read_frame(self, frame_number):
-
         # set current frame with -1 offset because it's += 1 in self.read()
         self.curr_frame = frame_number - 1
 
@@ -67,7 +66,6 @@ class readVideoHDF5:
 
 
 class readFullDataFromVideoHDF5(readVideoHDF5):
-
     def __init__(self, fileName):
         super().__init__(fileName, dataset="/full_data")
 

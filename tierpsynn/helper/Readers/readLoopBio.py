@@ -31,18 +31,18 @@ class readLoopBio:
         if not self.frames_read or self.frames_read[-1][0] < self.frame_max:
             img, (frame_number, frame_timestamp) = self.vid.get_next_image()
             self.frames_read.append((frame_number, frame_timestamp))
-            return 1, img
+            return True, img
         else:
-            return 0, None
+            return False, None
 
     def read_frame(self, frame_number):
         frame_to_read = self.first_frame + frame_number
-        if frame_to_read < self.frame_max:
-            img, (frame_number, frame_timestamp) = self.vid.get_image(frame_to_read)
-            self.frames_read.append((frame_number, frame_timestamp))
-            return 1, img
-        else:
-            return 0, None
+        if frame_to_read >= self.frame_max:
+            return False, None
+
+        img, (frame_number, frame_timestamp) = self.vid.get_image(frame_to_read)
+        self.frames_read.append((frame_number, frame_timestamp))
+        return True, img
 
     def __len__(self):
         return self.frame_max - self.first_frame + 1

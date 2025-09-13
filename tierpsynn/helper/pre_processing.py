@@ -250,7 +250,7 @@ def _initialise_parameters(input_vid: str, params_well: Union[int, str]):
             [
                 frame_data[1]
                 for frame in range(min_frame, max_frame, int(max_frame / 10))
-                if (frame_data := store.read_frame(frame))[1] is not None
+                if (frame_data := store.read_frame(frame))[0]
             ]
         )
 
