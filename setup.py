@@ -26,13 +26,6 @@ class CustomBuildExt(build_ext):
 
 # Configuration for the setup
 setup(
-    name="tierpsynn",
-    version="0.0.1",
-    description="Tool for skeletonising worms",
-    url="",
-    author="Weheliye Hashi",
-    author_email="w.weheliye@ic.ac.uk",
-    license="MIT",
     packages=find_packages(),
     zip_safe=False,
     ext_modules=cythonize(
@@ -41,13 +34,4 @@ setup(
     ),
     include_dirs=[np.get_include()],
     cmdclass={"build_ext": CustomBuildExt},
-    entry_points={
-        "console_scripts": [
-            "tierpsynn_process="
-            "tierpsynn.processing.main_process_local:process_main_local",
-            "ProcessLocal="
-            "tierpsynn.processing.processMultipleFilesFun:process_main_file",
-            "train_process=" "tierpsynn.train.train:process_main_train",
-        ]
-    },
 )
