@@ -1,8 +1,41 @@
-[build-system]
-requires = [
-    "setuptools>=64",
-    "wheel",
-    "cython",
-    "numpy"
+[project]
+name = "tierpsynn"
+version = "0.1.0"
+description = "Tool for skeletonising worms"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "absl-py>=2.3.1",
+    "chex>=0.1.90",
+    "dm-haiku>=0.0.14",
+    "dm-pix>=0.4.4",
+    "h5py>=3.14.0",
+    "imagestore>=3.1.0",
+    "jax==0.5.0 ; sys_platform == 'darwin'",
+    "jax[cuda12]>=0.5.3 ; sys_platform != 'darwin'",
+    "matplotlib>=3.10.6",
+    "numba>=0.61.2",
+    "numpy<2.0",
+    "opencv-python-headless>=4.11.0.86",
+    "optax>=0.2.5",
+    "pandas>=2.3.2",
+    "requests>=2.32.5",
+    "scikit-image>=0.25.2",
+    "scikit-learn>=1.7.1",
+    "scikit-video>=1.1.11",
+    "tables>=3.10.1",
+    "tqdm>=4.67.1",
+    "trackpy>=0.7",
 ]
+authors = [{ name = "Weheliye Hashi", email = "w.weheliye@ic.ac.uk" }]
+
+license = { text = "MIT" }
+
+[build-system]
+requires = ["setuptools>=64", "wheel", "pip", "cython", "numpy"]
 build-backend = "setuptools.build_meta"
+
+[project.scripts]
+train_process = "tierpsynn.train.train:process_main_train"
+tierpsynn_process = "tierpsynn.processing.main_process_local:process_main_local"
+ProcessLocal = "tierpsynn.processing.processMultipleFilesFun:process_main_file"
